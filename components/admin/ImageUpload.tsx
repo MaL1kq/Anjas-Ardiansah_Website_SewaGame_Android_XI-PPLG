@@ -5,8 +5,8 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 
 type Props = {
-  value: string;           // URL gambar saat ini
-  onChange: (url: string) => void; // callback saat gambar berubah
+  value: string;
+  onChange: (url: string) => void;
 };
 
 export default function ImageUpload({ value, onChange }: Props) {
@@ -33,12 +33,11 @@ export default function ImageUpload({ value, onChange }: Props) {
         return;
       }
 
-      onChange(data.url); // kirim URL ke parent
+      onChange(data.url);
     } catch {
       setError("Terjadi kesalahan saat upload.");
     } finally {
       setUploading(false);
-      // Reset input supaya file yang sama bisa dipilih lagi
       if (inputRef.current) inputRef.current.value = "";
     }
   }
@@ -50,7 +49,6 @@ export default function ImageUpload({ value, onChange }: Props) {
 
   return (
     <div className="space-y-3">
-      {/* Preview gambar */}
       {value ? (
         <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-900 border border-slate-700">
           <Image
@@ -59,19 +57,22 @@ export default function ImageUpload({ value, onChange }: Props) {
             fill
             className="object-cover"
           />
-          {/* Tombol hapus */}
           <button
             type="button"
             onClick={handleRemove}
             className="absolute top-2 right-2 w-7 h-7 rounded-full bg-red-500/80 hover:bg-red-500 text-white flex items-center justify-center text-xs transition-colors z-10"
+            aria-label="Hapus gambar"
           >
             ✕
           </button>
         </div>
       ) : (
-        /* Area drop / pilih file */
         <div
           onClick={() => inputRef.current?.click()}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === "Enter" && inputRef.current?.click()}
+          aria-label="Pilih gambar produk"
           className="w-full aspect-video rounded-xl border-2 border-dashed border-slate-700 hover:border-purple-500/50 bg-slate-900/50 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all duration-200 hover:bg-slate-800/40"
         >
           <span className="text-3xl">🖼️</span>
@@ -82,16 +83,20 @@ export default function ImageUpload({ value, onChange }: Props) {
         </div>
       )}
 
-      {/* Input file hidden */}
+      {/* FIX: aria-label pada input file hidden */}
+      <label htmlFor="product-image-upload" className="sr-only">
+        Upload gambar produk
+      </label>
       <input
+        id="product-image-upload"
         ref={inputRef}
         type="file"
         accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
         onChange={handleFile}
         className="hidden"
+        aria-label="Upload gambar produk"
       />
 
-      {/* Tombol ganti gambar (kalau sudah ada gambar) */}
       {value && !uploading && (
         <button
           type="button"
@@ -102,7 +107,6 @@ export default function ImageUpload({ value, onChange }: Props) {
         </button>
       )}
 
-      {/* Loading indicator */}
       {uploading && (
         <div className="flex items-center gap-2 text-sm text-purple-300">
           <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
@@ -113,7 +117,6 @@ export default function ImageUpload({ value, onChange }: Props) {
         </div>
       )}
 
-      {/* Error */}
       {error && (
         <p className="text-xs text-red-400">{error}</p>
       )}

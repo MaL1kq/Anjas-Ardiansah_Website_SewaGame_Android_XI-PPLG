@@ -302,11 +302,8 @@ export default function AdminProductsPage() {
             onClick={() => setModalOpen(false)}
           />
 
-          {/* Modal card */}
-          <div
-            className="relative w-full max-w-lg glass p-6 md:p-8 max-h-[90vh] overflow-y-auto"
-            style={{ zIndex: 51 }}
-          >
+          {/* FIX: ganti style={{ zIndex: 51 }} ke className z-[51] */}
+          <div className="relative w-full max-w-lg glass p-6 md:p-8 max-h-[90vh] overflow-y-auto z-[51]">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-black text-white">
                 {editTarget ? "Edit Produk" : "Tambah Produk Baru"}
@@ -314,6 +311,7 @@ export default function AdminProductsPage() {
               <button
                 onClick={() => setModalOpen(false)}
                 className="w-8 h-8 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition-colors"
+                aria-label="Tutup modal"
               >✕</button>
             </div>
 
@@ -326,10 +324,13 @@ export default function AdminProductsPage() {
             <div className="space-y-4">
               {/* Nama */}
               <div>
-                <label className="block text-xs font-medium text-slate-400 mb-1.5">
+                <label htmlFor="product-name" className="block text-xs font-medium text-slate-400 mb-1.5">
                   Nama Produk <span className="text-red-400">*</span>
                 </label>
-                <input type="text" className="input-dark text-sm"
+                <input
+                  id="product-name"
+                  type="text"
+                  className="input-dark text-sm"
                   placeholder="Nama aplikasi / game"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -338,10 +339,11 @@ export default function AdminProductsPage() {
 
               {/* Deskripsi */}
               <div>
-                <label className="block text-xs font-medium text-slate-400 mb-1.5">
+                <label htmlFor="product-desc" className="block text-xs font-medium text-slate-400 mb-1.5">
                   Deskripsi <span className="text-red-400">*</span>
                 </label>
                 <textarea
+                  id="product-desc"
                   rows={3}
                   className="input-dark text-sm resize-none"
                   placeholder="Deskripsi singkat produk..."
@@ -353,20 +355,26 @@ export default function AdminProductsPage() {
               {/* Harga + Kategori */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-slate-400 mb-1.5">
+                  <label htmlFor="product-price" className="block text-xs font-medium text-slate-400 mb-1.5">
                     Harga (Rp) <span className="text-red-400">*</span>
                   </label>
-                  <input type="number" min="0" className="input-dark text-sm"
+                  <input
+                    id="product-price"
+                    type="number"
+                    min="0"
+                    className="input-dark text-sm"
                     placeholder="15000"
                     value={form.price}
                     onChange={(e) => setForm({ ...form, price: e.target.value })}
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-400 mb-1.5">
+                  {/* FIX: tambah htmlFor + id agar select punya accessible name */}
+                  <label htmlFor="product-category" className="block text-xs font-medium text-slate-400 mb-1.5">
                     Kategori <span className="text-red-400">*</span>
                   </label>
                   <select
+                    id="product-category"
                     className="input-dark text-sm"
                     value={form.category}
                     onChange={(e) => setForm({ ...form, category: e.target.value as "GAME" | "ANDROID" })}
@@ -390,10 +398,13 @@ export default function AdminProductsPage() {
 
               {/* itch.io URL */}
               <div>
-                <label className="block text-xs font-medium text-slate-400 mb-1.5">
+                <label htmlFor="product-itchio" className="block text-xs font-medium text-slate-400 mb-1.5">
                   Link itch.io {form.category === "GAME" && <span className="text-purple-400">(untuk game)</span>}
                 </label>
-                <input type="url" className="input-dark text-sm"
+                <input
+                  id="product-itchio"
+                  type="url"
+                  className="input-dark text-sm"
                   placeholder="https://username.itch.io/game-name"
                   value={form.itchioUrl}
                   onChange={(e) => setForm({ ...form, itchioUrl: e.target.value })}
@@ -402,10 +413,13 @@ export default function AdminProductsPage() {
 
               {/* GitHub URL */}
               <div>
-                <label className="block text-xs font-medium text-slate-400 mb-1.5">
+                <label htmlFor="product-github" className="block text-xs font-medium text-slate-400 mb-1.5">
                   Link GitHub {form.category === "ANDROID" && <span className="text-purple-400">(untuk android)</span>}
                 </label>
-                <input type="url" className="input-dark text-sm"
+                <input
+                  id="product-github"
+                  type="url"
+                  className="input-dark text-sm"
                   placeholder="https://github.com/username/repo"
                   value={form.githubUrl}
                   onChange={(e) => setForm({ ...form, githubUrl: e.target.value })}
